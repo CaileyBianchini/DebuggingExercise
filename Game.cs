@@ -6,6 +6,11 @@ namespace HelloWorld
 {
     class Game
     {
+        //Cailey Bianchini
+        //this is the debugging exercise however I accidently replaced it with Hello World, I copy and pasted the original so its alright
+
+
+
         bool _gameOver = false;
         string _playerName = "Hero";
         int _playerHealth = 120;
@@ -77,7 +82,7 @@ namespace HelloWorld
                 //If input is 1, the player wants to attack. By default the enemy blocks any incoming attack < that sucks so no
                 if (input == '1')
                 {
-                    Attack(enemyHealth, _playerDamage);
+                    //Attack(enemyHealth, _playerDamage);
                     Console.WriteLine("You dealt " + _playerDamage + " damage.");
                     Console.Write("> ");
                     Console.ReadKey();
