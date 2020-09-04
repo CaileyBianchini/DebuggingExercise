@@ -14,7 +14,7 @@ namespace HelloWorld
         bool _gameOver = false;
         string _playerName = "Hero";
         int _playerHealth = 120;
-        int _playerDamage = 20;
+        int playerDamage = 20;
         int _playerDefense = 10;
         int levelScaleMax = 5;
         //Run the game
@@ -68,35 +68,40 @@ namespace HelloWorld
                         break;
                     }
             }
+  
 
             //Loops until the player or the enemy is dead
-            while (_playerHealth >= 0 || enemyHealth >= 0)
+            while (_playerHealth > 0 && enemyHealth > 0)
             {
                 //Displays the stats for both charactersa to the screen before the player takes their turn
-                PrintStats(_playerName, _playerHealth, _playerDamage, _playerDefense);
+                PrintStats(_playerName, _playerHealth, playerDamage, _playerDefense);
                 PrintStats(enemyName, enemyHealth, enemyAttack, enemyDefense);
 
                 //Get input from the player
                 char input = ' ';
-                GetInput("Attack", "Defend");
+                input = GetInput("Attack", "Defend");
                 //If input is 1, the player wants to attack. By default the enemy blocks any incoming attack < that sucks so no
                 if (input == '1')
                 {
-                    //Attack(enemyHealth, _playerDamage);
-                    Console.WriteLine("You dealt " + _playerDamage + " damage.");
+                    enemyHealth -= playerDamage;
+                    Console.WriteLine("\nYou dealt " + playerDamage + " damage.");
                     Console.Write("> ");
                     Console.ReadKey();
+
                 }
                 //If the player decides to defend the enemy just takes their turn. However this time the block attack function is
                 //called instead of simply decrementing the health by the enemy's attack value.
-                else if (input == '2')
+                if (input == '2')
                 {
-                    BlockAttack(_playerHealth, enemyAttack, _playerDefense);
+                    int attackVal = playerDamage;
+                    int damage = attackVal - enemyDefense;
+                    BlockAttack(ref enemyHealth, ref attackVal, ref enemyDefense, ref damage);
                     Console.WriteLine(enemyName + " dealt " + enemyAttack + " damage.");
+
                     Console.Write("> ");
                     Console.ReadKey();
-                    turnCount++;
-                    Console.Clear();
+
+                    
                 }
                 Console.Clear();
                 //After the player attacks, the enemy takes its turn. Since the player decided not to defend, the block attack function is not called.
@@ -108,25 +113,25 @@ namespace HelloWorld
 
             }
             //Return whether or not our player died
-            return _playerHealth != 0;
+            roomNum++;
+            return _playerHealth <= 0;
+
 
         }
         //Decrements the health of a character. The attack value is subtracted by that character's defense
-        void BlockAttack(int opponentHealth, int attackVal, int opponentDefense)
+        int BlockAttack(ref int enemyHealth, ref int attackVal,  ref int enemyDefense, ref int damage)
         {
-            int damage = attackVal - opponentDefense;
+
+            attackVal = playerDamage;
+            damage = attackVal - enemyDefense;
             if (damage < 0)
             {
                 damage = 0;
             }
-            opponentHealth -= damage;
+            enemyHealth -= damage;
+            return damage;
         }
-        void Attack(int enemyHealth, int _playerDamage)
-        {
 
-            enemyHealth = enemyHealth - _playerDamage;
-
-        }
         //Scales up the player's stats based on the amount of turns it took in the last battle
         void LevelUp(int turnCount)
         {
@@ -137,7 +142,7 @@ namespace HelloWorld
                 scale = 1;
             }
             _playerHealth += 10 * scale;
-            _playerDamage *= scale;
+            playerDamage *= scale;
             _playerDefense *= scale;
         }
         //Gets input from the player
@@ -163,29 +168,38 @@ namespace HelloWorld
         {
             Console.WriteLine("\n" + name);
             Console.WriteLine("Health: " + health);
-            Console.WriteLine("Damage: " + damage);
+            Console.WriteLine("Damage: " + playerDamage);
             Console.WriteLine("Defense: " + defense);
         }
 
         //This is used to progress through our game. A recursive function meant to switch the rooms and start the battles inside them.
         void ClimbLadder(int roomNum)
         {
+            Console.WriteLine("You are in room " + roomNum);
+            char input = ' ';
+            input = GetInput("Go Forward", "Stay");
+            if (input == '1')
+            {
+                roomNum++;
+            }
+
+
             //Displays context based on which room the player is in
             switch (roomNum)
             {
                 case 0:
                     {
-                        Console.WriteLine("A wizard blocks your path");
+                        Console.WriteLine("\nA wizard blocks your path");
                         break;
                     }
                 case 1:
                     {
-                        Console.WriteLine("A troll stands before you");
+                        Console.WriteLine("\nA troll stands before you");
                         break;
                     }
                 case 2:
                     {
-                        Console.WriteLine("A giant has appeared!");
+                        Console.WriteLine("\nA giant has appeared!");
                         break;
                     }
                 default:
@@ -228,25 +242,25 @@ namespace HelloWorld
                     case '1':
                         {
                             _playerName = "Sir Kibble";
-                            _playerHealth = 120;
-                            _playerDefense = 10;
-                            _playerDamage = 40;
+                            int _playerHealth = 120;
+                            int _playerDefense = 10;
+                            int playerDamage = 40;
                             break;
                         }
                     case '2':
                         {
                             _playerName = "Gnojoel";
-                            _playerHealth = 40;
-                            _playerDefense = 2;
-                            _playerDamage = 70;
+                            int _playerHealth = 40;
+                            int _playerDefense = 2;
+                            int playerDamage = 70;
                             break;
                         }
                     case '3':
                         {
                             _playerName = "Joedazz";
-                            _playerHealth = 200;
-                            _playerDefense = 5;
-                            _playerDamage = 25;
+                            int _playerHealth = 200;
+                            int _playerDefense = 5;
+                            int playerDamage = 25;
                             break;
                         }
                     //If an invalid input is selected display and input message and input over again.
@@ -261,7 +275,7 @@ namespace HelloWorld
                 Console.Clear();
             }
             //Prints the stats of the choosen character to the screen before the game begins to give the player visual feedback
-            PrintStats(_playerName, _playerHealth, _playerDamage, _playerDefense);
+            PrintStats(_playerName, _playerHealth, playerDamage, _playerDefense);
             Console.WriteLine("Press any key to continue.");
             Console.Write("> ");
             Console.ReadKey();
