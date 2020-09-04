@@ -18,6 +18,8 @@ namespace HelloWorld
 
             while (_gameOver == false)
             {
+                Start();
+                Update();
 
             }
 
@@ -41,6 +43,7 @@ namespace HelloWorld
                         enemyAttack = 20;
                         enemyDefense = 5;
                         enemyName = "Wizard";
+                        break;
                     }
                 case 1:
                     {
@@ -48,14 +51,16 @@ namespace HelloWorld
                         enemyAttack = 30;
                         enemyDefense = 5;
                         enemyName = "Troll";
+                        break;
                     }
-                case 2
+                case 2:
                     {
 
                         enemyHealth = 200;
                         enemyAttack = 40;
                         enemyDefense = 10;
                         enemyName = "Giant";
+                        break;
                     }
             }
 
@@ -67,19 +72,19 @@ namespace HelloWorld
                 PrintStats(enemyName, enemyHealth, enemyAttack, enemyDefense);
 
                 //Get input from the player
-                char input;
-                GetInput(input, "Attack", "Defend");
-                //If input is 1, the player wants to attack. By default the enemy blocks any incoming attack
+                char input = ' ';
+                GetInput("Attack", "Defend");
+                //If input is 1, the player wants to attack. By default the enemy blocks any incoming attack < that sucks so no
                 if (input == '1')
                 {
-                    BlockAttack(enemyHealth, _playerDamage, enemyDefense);
+                    Attack(enemyHealth, _playerDamage);
                     Console.WriteLine("You dealt " + _playerDamage + " damage.");
                     Console.Write("> ");
                     Console.ReadKey();
                 }
                 //If the player decides to defend the enemy just takes their turn. However this time the block attack function is
                 //called instead of simply decrementing the health by the enemy's attack value.
-                else
+                else if (input == '2')
                 {
                     BlockAttack(_playerHealth, enemyAttack, _playerDefense);
                     Console.WriteLine(enemyName + " dealt " + enemyAttack + " damage.");
@@ -111,6 +116,12 @@ namespace HelloWorld
             }
             opponentHealth -= damage;
         }
+        void Attack(int enemyHealth, int _playerDamage)
+        {
+
+            enemyHealth = enemyHealth - _playerDamage;
+
+        }
         //Scales up the player's stats based on the amount of turns it took in the last battle
         void LevelUp(int turnCount)
         {
@@ -127,22 +138,25 @@ namespace HelloWorld
         //Gets input from the player
         //Out's the char variable given. This variables stores the player's input choice.
         //The parameters option1 and option 2 displays the players current chpices to the screen
-        void GetInput(out char input, string option1, string option2)
+        char GetInput(string option1, string option2)
         {
             //Initialize input
-            input = ' ';
+            char input = ' ';
             //Loop until the player enters a valid input
             while (input != '1' && input != '2')
+            {
                 Console.WriteLine("1." + option1);
-            Console.WriteLine("2." + option2);
-            Console.Write("> ");
-            input = Console.ReadKey().KeyChar;
+                Console.WriteLine("2." + option2);
+                Console.Write("> ");
+                input = Console.ReadKey().KeyChar;
+            }
+            return input;
         }
 
         //Prints the stats given in the parameter list to the console
         void PrintStats(string name, int health, int damage, int defense)
         {
-            Console.WriteLine("/n" + name);
+            Console.WriteLine("\n" + name);
             Console.WriteLine("Health: " + health);
             Console.WriteLine("Damage: " + damage);
             Console.WriteLine("Defense: " + defense);
@@ -157,19 +171,22 @@ namespace HelloWorld
                 case 0:
                     {
                         Console.WriteLine("A wizard blocks your path");
+                        break;
                     }
                 case 1:
                     {
                         Console.WriteLine("A troll stands before you");
+                        break;
                     }
-                case 2
+                case 2:
                     {
                         Console.WriteLine("A giant has appeared!");
+                        break;
                     }
                 default:
                     {
                         _gameOver = true;
-                        return;
+                        break;
                     }
             }
             int turnCount = 0;
@@ -179,7 +196,10 @@ namespace HelloWorld
                 LevelUp(turnCount);
                 ClimbLadder(roomNum++);
             }
-            _gameOver = true;
+            else
+            {
+                _gameOver = true;
+            }
 
         }
 
@@ -206,6 +226,7 @@ namespace HelloWorld
                             _playerHealth = 120;
                             _playerDefense = 10;
                             _playerDamage = 40;
+                            break;
                         }
                     case '2':
                         {
@@ -213,13 +234,15 @@ namespace HelloWorld
                             _playerHealth = 40;
                             _playerDefense = 2;
                             _playerDamage = 70;
+                            break;
                         }
-                    case '3'
+                    case '3':
                         {
                             _playerName = "Joedazz";
                             _playerHealth = 200;
                             _playerDefense = 5;
                             _playerDamage = 25;
+                            break;
                         }
                     //If an invalid input is selected display and input message and input over again.
                     default:
@@ -260,8 +283,11 @@ namespace HelloWorld
                 Console.WriteLine("Failure");
                 return;
             }
-            //Print game over message
-            Console.WriteLine("Congrats");
+            else
+            {
+                //Print game over message
+                Console.WriteLine("Congrats");
+            }
         }
     }
 }
