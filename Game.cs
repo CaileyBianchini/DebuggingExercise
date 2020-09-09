@@ -25,6 +25,7 @@ namespace HelloWorld
             {
                 Start();
                 Update();
+                End();
 
             }
 
@@ -87,6 +88,7 @@ namespace HelloWorld
                     Console.WriteLine("\nYou dealt " + playerDamage + " damage.");
                     Console.Write("> ");
                     Console.ReadKey();
+                    Console.Clear();
 
                 }
                 //If the player decides to defend the enemy just takes their turn. However this time the block attack function is
@@ -100,16 +102,26 @@ namespace HelloWorld
 
                     Console.Write("> ");
                     Console.ReadKey();
+                    Console.Clear();
 
                     
                 }
                 Console.Clear();
+
+                if (enemyHealth > 0)
+                { 
                 //After the player attacks, the enemy takes its turn. Since the player decided not to defend, the block attack function is not called.
                 _playerHealth -= enemyAttack;
                 Console.WriteLine(enemyName + " dealt " + enemyAttack + " damage.");
+                    }
                 Console.Write("> ");
                 Console.ReadKey();
                 turnCount++;
+
+                if (_playerHealth < enemyAttack)
+                {
+                    return _playerHealth <= enemyAttack;
+                }
 
             }
             //Return whether or not our player died
@@ -175,12 +187,20 @@ namespace HelloWorld
         //This is used to progress through our game. A recursive function meant to switch the rooms and start the battles inside them.
         void ClimbLadder(int roomNum)
         {
-            Console.WriteLine("You are in room " + roomNum);
-            char input = ' ';
-            input = GetInput("Go Forward", "Stay");
-            if (input == '1')
+            if (_playerHealth > 0)
             {
-                roomNum++;
+                Console.WriteLine("You are in room " + roomNum);
+                char input = ' ';
+                input = GetInput("Go Forward", "Stay");
+                if (input == '1')
+                {
+                    roomNum++;
+                }
+            }
+            else
+            {
+                _gameOver = true;
+                return;
             }
 
 
@@ -213,13 +233,9 @@ namespace HelloWorld
             if (StartBattle(roomNum, ref turnCount))
             {
                 LevelUp(turnCount);
-                ClimbLadder(roomNum++);
+                ClimbLadder(roomNum + 1);
             }
-            else
-            {
                 _gameOver = true;
-            }
-
         }
 
         //Displays the character selection menu. 
