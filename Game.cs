@@ -110,10 +110,10 @@ namespace HelloWorld
 
                 if (enemyHealth > 0)
                 { 
-                //After the player attacks, the enemy takes its turn. Since the player decided not to defend, the block attack function is not called.
-                _playerHealth -= enemyAttack;
-                Console.WriteLine(enemyName + " dealt " + enemyAttack + " damage.");
-                    }
+                    //After the player attacks, the enemy takes its turn. Since the player decided not to defend, the block attack function is not called.
+                    _playerHealth -= enemyAttack;
+                    Console.WriteLine(enemyName + " dealt " + enemyAttack + " damage.");
+                }
                 Console.Write("> ");
                 Console.ReadKey();
                 turnCount++;
