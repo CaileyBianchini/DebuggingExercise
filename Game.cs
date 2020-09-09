@@ -16,7 +16,13 @@ namespace HelloWorld
         int _playerHealth = 120;
         int playerDamage = 20;
         int _playerDefense = 10;
-        int levelScaleMax = 5;
+        int _levelScaleMax = 5;
+
+        int _turnCount = 0;
+
+        Random random;
+
+
         //Run the game
         public void Run()
         {
@@ -80,7 +86,7 @@ namespace HelloWorld
 
                 //Get input from the player
                 char input = ' ';
-                input = GetInput("Attack", "Defend");
+                input = GetInput("Attack", "Defend", "What would you like to do?");
                 //If input is 1, the player wants to attack. By default the enemy blocks any incoming attack < that sucks so no
                 if (input == '1')
                 {
@@ -106,7 +112,6 @@ namespace HelloWorld
 
                     
                 }
-                Console.Clear();
 
                 if (enemyHealth > 0)
                 { 
@@ -116,6 +121,7 @@ namespace HelloWorld
                 }
                 Console.Write("> ");
                 Console.ReadKey();
+                Console.Clear();
                 turnCount++;
 
                 if (_playerHealth < enemyAttack)
@@ -144,11 +150,58 @@ namespace HelloWorld
             return damage;
         }
 
-        //Scales up the player's stats based on the amount of turns it took in the last battle
-        void LevelUp(int turnCount)
+        void PotionChoices(int _playerHealth, int _playerDefense)
         {
+            char input = ' ';
+            Console.WriteLine("Since this is your first dungeon I will let you get these for free.");
+            GetInput("Blue Potion", "Red Potion", "Random", "Which potion do you want?");
+            if (input =='3')
+            {
+                random = new Random();
+                int randomNumber = random.Next(1, 2);
+            }
+            if (input == '1')
+            {
+                Console.WriteLine("Oh? So you chose the Blue Potion? That is 10 to you defense.");
+                _playerDefense = _playerDefense + 10;
+            }
+            else if (input == '2')
+            {
+                Console.WriteLine("Oh? So you chose the Red Potion? That is 30 to you defense.");
+                _playerHealth = _playerHealth + 30;
+            }
+            else
+            {
+                Console.WriteLine("Too bad, maybe next time!");
+                return;
+            }
+     
+            return;
+        }
+
+
+        //Scales up the player's stats based on the amount of turns it took in the last battle
+        //can also upgrade stats
+        public void UpgradeStats(int turnCount)
+        {
+
+            //Shop
+            Console.WriteLine("you walk to the shawdowy corner where you spot a susspicious man." + 
+                " He smiles at you and opens up his jacket and you see experince bottles!");
+            Console.WriteLine("In a scratchy voice he spoke 'Would you like to level up your stats?'");
+            char input = ' ';
+            GetInput("Yes", "No", "So? Whats your choice?");
+            if (input == '1')
+            {
+                PotionChoices(_playerHealth, _playerDefense);
+            }
+            else
+            {
+                Console.WriteLine("The old man shook his head 'Such a shame, maybe next time.'");
+            }
+
             //Subtract the amount of turns from our maximum level scale to get our current level scale
-            int scale = levelScaleMax - turnCount;
+            int scale = _levelScaleMax - turnCount;
             if (scale <= 0)
             {
                 scale = 1;
@@ -156,6 +209,8 @@ namespace HelloWorld
             _playerHealth += 10 * scale;
             playerDamage *= scale;
             _playerDefense *= scale;
+
+
         }
         //Gets input from the player
         //Out's the char variable given. This variables stores the player's input choice.
@@ -169,6 +224,54 @@ namespace HelloWorld
             {
                 Console.WriteLine("1." + option1);
                 Console.WriteLine("2." + option2);
+                Console.Write("> ");
+                input = Console.ReadKey().KeyChar;
+            }
+            return input;
+        }
+        char GetInput(string option1, string option2, string quiry)
+        {
+            Console.WriteLine(quiry);
+            //Initialize input
+            char input = ' ';
+            //Loop until the player enters a valid input
+            while (input != '1' && input != '2')
+            {
+                Console.WriteLine("1." + option1);
+                Console.WriteLine("2." + option2);
+                Console.Write("> ");
+                input = Console.ReadKey().KeyChar;
+            }
+            return input;
+        }
+        char GetInput(string option1, string option2, string option3, string quiry)
+        {
+            Console.WriteLine(quiry);
+            //Initialize input
+            char input = ' ';
+            //Loop until the player enters a valid input
+            while (input != '1' && input != '2')
+            {
+                Console.WriteLine("1." + option1);
+                Console.WriteLine("2." + option2);
+                Console.WriteLine("3. " + option3);
+                Console.Write("> ");
+                input = Console.ReadKey().KeyChar;
+            }
+            return input;
+        }
+        char GetInput(string option1, string option2, string option3, string option4, string quiry)
+        {
+            Console.WriteLine(quiry);
+            //Initialize input
+            char input = ' ';
+            //Loop until the player enters a valid input
+            while (input != '1' && input != '2')
+            {
+                Console.WriteLine("1." + option1);
+                Console.WriteLine("2." + option2);
+                Console.WriteLine("3. " + option3);
+                Console.WriteLine("4. " + option4);
                 Console.Write("> ");
                 input = Console.ReadKey().KeyChar;
             }
@@ -191,11 +294,17 @@ namespace HelloWorld
             {
                 Console.WriteLine("You are in room " + roomNum);
                 char input = ' ';
-                input = GetInput("Go Forward", "Stay");
+                input = GetInput("Go Forward", "Stay", "Go to the shadowed man", "What would you like to do?");
                 if (input == '1')
                 {
                     roomNum++;
                 }
+                else if(input == '3')
+                {
+                    UpgradeStats(_levelScaleMax); 
+                    return;
+                }
+
             }
             else
             {
@@ -232,7 +341,7 @@ namespace HelloWorld
             //Starts a battle. If the player survived the battle, level them up and then proceed to the next room.
             if (StartBattle(roomNum, ref turnCount))
             {
-                LevelUp(turnCount);
+                UpgradeStats(turnCount);
                 ClimbLadder(roomNum + 1);
             }
                 _gameOver = true;
