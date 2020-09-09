@@ -9,7 +9,14 @@ namespace HelloWorld
         //Cailey Bianchini
         //this is the debugging exercise however I accidently replaced it with Hello World, I copy and pasted the original so its alright
 
-
+        struct Player
+        {
+            public int _playerHealth;
+            public int playerDamage;
+            public int _playerDefense;
+            public int _levelScaleMax;
+            public string _playerName;
+        }
 
         bool _gameOver = false;
         string _playerName = "Hero";
