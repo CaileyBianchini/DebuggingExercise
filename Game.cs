@@ -56,7 +56,7 @@ namespace HelloWorld
             {
                 case 0:
                     {
-                        enemyHealth = 100;
+                        enemyHealth = 80;
                         enemyAttack = 20;
                         enemyDefense = 5;
                         enemyName = "Wizard";
@@ -73,7 +73,7 @@ namespace HelloWorld
                 case 2:
                     {
 
-                        enemyHealth = 200;
+                        enemyHealth = 150;
                         enemyAttack = 40;
                         enemyDefense = 10;
                         enemyName = "Giant";
@@ -95,6 +95,9 @@ namespace HelloWorld
                 //If input is 1, the player wants to attack. By default the enemy blocks any incoming attack < that sucks so no
                 if (input == '1')
                 {
+                    Console.Write("> ");
+                    Console.ReadKey();
+                    Console.Clear();
                     enemyHealth -= player1.playerDamage;
                     Console.WriteLine("\nYou dealt " + player1.playerDamage + " damage.");
                     Console.Write("> ");
@@ -106,6 +109,9 @@ namespace HelloWorld
                 //called instead of simply decrementing the health by the enemy's attack value.
                 if (input == '2')
                 {
+                    Console.Write("> ");
+                    Console.ReadKey();
+                    Console.Clear();
                     int attackVal = player1.playerDamage;
                     int damage = attackVal - enemyDefense;
                     BlockAttack(ref enemyHealth, ref attackVal, ref enemyDefense, ref damage);
@@ -117,6 +123,38 @@ namespace HelloWorld
 
                     
                 }
+                random = new Random();
+                int randomNumber = random.Next(1, 50);
+                if (enemyName == "Wizard" && randomNumber == 3)
+                {
+                    Console.WriteLine("During the battle you found an attack stone thus you of course used it to rice you attack damage!");
+                    Console.WriteLine("+25 Damage!");
+                    player1.playerDamage = player1.playerDamage + 25;
+                    Console.Write("> ");
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+                if (enemyName == "Troll" && randomNumber == 25)
+                {
+                    Console.WriteLine("While fighting the Troll you stole its Club.");
+                    Console.WriteLine("Troll: -20 Damage!");
+                    Console.WriteLine("Player: +20 Damage!");
+                    player1.playerDamage = player1.playerDamage + 20;
+                    enemyAttack = enemyAttack - 20;
+                    Console.Write("> ");
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+                if (enemyName == "Giant" && randomNumber == 42)
+                {
+                    Console.WriteLine("You found a magic bean! It's a surprise for sure but you decide to eat it!");
+                    Console.WriteLine("+30 Damage!");
+                    player1.playerDamage = player1.playerDamage + 30;
+                    Console.Write("> ");
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+
 
                 if (enemyHealth > 0)
                 {
@@ -129,14 +167,20 @@ namespace HelloWorld
                 Console.Clear();
                 turnCount++;
 
-                if (player1._playerHealth < enemyAttack)
+                if (player1._playerHealth == 0 )
                 {
-                    return player1._playerHealth <= enemyAttack;
+                    _gameOver = true;
+                    Console.WriteLine("-Health: Zero-");
+                    break;
                 }
 
             }
             //Return whether or not our player died
-            roomNum++;
+            if (player1._playerHealth > 0)
+            {
+                roomNum++;
+            }
+            
             return player1._playerHealth <= 0;
 
 
@@ -157,47 +201,68 @@ namespace HelloWorld
 
         void PotionChoices(int _playerHealth, int _playerDefense)
         {
+            int potion = 0;
             char input = ' ';
             Console.WriteLine("Since this is your first dungeon I will let you get these for free.");
             GetInput("Blue Potion", "Red Potion", "Random", "Which potion do you want?");
-            if (input =='3')
+            if(input == '1')
             {
+                potion = 1;
+            }
+            if (input == '2')
+            {
+                potion = 2;
+
+            }
+            if (input == '3')
+            {
+                potion = 0;
+
+            }
+
+            switch (potion)
+            {
+                case 0:
+                {
                 
-                random = new Random();
-                int randomNumber = random.Next(1, 2);
+                    random = new Random();
+                    int randomNumber = random.Next(1, 2);
 
-                //random chance
-                if (randomNumber == 1)
+                    //random chance
+                    if (randomNumber == 1)
+                    {
+                        Console.WriteLine("\nOh? You got the Blue Potion! That is 10 to you defense.");
+                        _playerDefense = _playerDefense + 10;
+                    }
+                    else if (randomNumber == 2)
+                    {
+                        Console.WriteLine("\nOh? You got the Red Potion! That is 30 to you defense.");
+                        _playerHealth = _playerHealth + 30;
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nToo bad, maybe next time!");
+                        return;
+                    }
+                        break;
+                }
+                case 1:
                 {
-                    Console.WriteLine("Oh? So you chose the Blue Potion? That is 10 to you defense.");
+                    Console.WriteLine("\nOh? So you chose the Blue Potion? That is 10 to you defense.");
                     _playerDefense = _playerDefense + 10;
+                        break;
                 }
-                else if (randomNumber == 2)
+                case 2:
                 {
-                    Console.WriteLine("Oh? So you chose the Red Potion? That is 30 to you defense.");
+                    Console.WriteLine("\nOh? So you chose the Red Potion? That is 30 to you defense.");
                     _playerHealth = _playerHealth + 30;
+                        break;
                 }
-                else
+                default:
                 {
-                    Console.WriteLine("Too bad, maybe next time!");
-                    return;
+                    Console.WriteLine("\nToo bad, maybe next time!");
+                    break;
                 }
-
-            }
-            else if (input == '1')
-            {
-                Console.WriteLine("Oh? So you chose the Blue Potion? That is 10 to you defense.");
-                _playerDefense = _playerDefense + 10;
-            }
-            else if (input == '2')
-            {
-                Console.WriteLine("Oh? So you chose the Red Potion? That is 30 to you defense.");
-                _playerHealth = _playerHealth + 30;
-            }
-            else
-            {
-                Console.WriteLine("Too bad, maybe next time!");
-                return;
             }
      
             return;
@@ -210,18 +275,18 @@ namespace HelloWorld
         {
 
             //Shop
-            Console.WriteLine("you walk to the shawdowy corner where you spot a susspicious man." + 
+            Console.WriteLine("\nYou walk to the shawdowy corner where you spot a susspicious man." + 
                 " He smiles at you and opens up his jacket and you see experince bottles!");
             Console.WriteLine("In a scratchy voice he spoke 'Would you like to level up your stats?'");
             char input = ' ';
-            GetInput("Yes", "No", "So? Whats your choice?");
+            input = GetInput("Yes", "No", "So? Whats your choice?");
             if (input == '1')
             {
                 PotionChoices(player1._playerHealth, player1._playerDefense);
             }
-            else
+            else if (input == '2')
             {
-                Console.WriteLine("The old man shook his head 'Such a shame, maybe next time.'");
+                Console.WriteLine("\nThe old man shook his head 'Such a shame, maybe next time.'");
             }
 
             //Subtract the amount of turns from our maximum level scale to get our current level scale
@@ -246,7 +311,7 @@ namespace HelloWorld
             //Loop until the player enters a valid input
             while (input != '1' && input != '2')
             {
-                Console.WriteLine("1." + option1);
+                Console.WriteLine("\n1." + option1);
                 Console.WriteLine("2." + option2);
                 Console.Write("> ");
                 input = Console.ReadKey().KeyChar;
@@ -261,7 +326,7 @@ namespace HelloWorld
             //Loop until the player enters a valid input
             while (input != '1' && input != '2')
             {
-                Console.WriteLine("1." + option1);
+                Console.WriteLine("\n1." + option1);
                 Console.WriteLine("2." + option2);
                 Console.Write("> ");
                 input = Console.ReadKey().KeyChar;
@@ -274,11 +339,11 @@ namespace HelloWorld
             //Initialize input
             char input = ' ';
             //Loop until the player enters a valid input
-            while (input != '1' && input != '2')
+            while (input != '1' && input != '2' && input !='3')
             {
-                Console.WriteLine("1." + option1);
+                Console.WriteLine("\n1." + option1);
                 Console.WriteLine("2." + option2);
-                Console.WriteLine("3. " + option3);
+                Console.WriteLine("3." + option3);
                 Console.Write("> ");
                 input = Console.ReadKey().KeyChar;
             }
@@ -290,9 +355,9 @@ namespace HelloWorld
             //Initialize input
             char input = ' ';
             //Loop until the player enters a valid input
-            while (input != '1' && input != '2')
+            while (input != '1' && input != '2' && input != '3' && input != '4')
             {
-                Console.WriteLine("1." + option1);
+                Console.WriteLine("\n1." + option1);
                 Console.WriteLine("2." + option2);
                 Console.WriteLine("3. " + option3);
                 Console.WriteLine("4. " + option4);
@@ -327,7 +392,7 @@ namespace HelloWorld
                 if(input == '3')
                 {
                     roomNum = 0;
-                    return;
+                    
                 }
 
             }
@@ -397,7 +462,7 @@ namespace HelloWorld
                     case '1':
                         {
                             player1._playerName = "Sir Kibble";
-                            player1._playerHealth = 120;
+                            player1._playerHealth = 140;
                             player1._playerDefense = 10;
                             player1.playerDamage = 40;
                             break;
@@ -405,7 +470,7 @@ namespace HelloWorld
                     case '2':
                         {
                             player1._playerName = "Gnojoel";
-                            player1._playerHealth = 40;
+                            player1._playerHealth = 60;
                             player1._playerDefense = 2;
                             player1.playerDamage = 70;
                             break;
@@ -415,7 +480,7 @@ namespace HelloWorld
                             player1._playerName = "Joedazz";
                             player1._playerHealth = 200;
                             player1._playerDefense = 5;
-                            player1.playerDamage = 25;
+                            player1.playerDamage = 30;
                             break;
                         }
                     //If an invalid input is selected display and input message and input over again.
