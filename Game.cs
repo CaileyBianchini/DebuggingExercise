@@ -34,8 +34,11 @@ namespace HelloWorld
 
             while (_gameOver == false)
             {
+                //player
                 Start();
+                //mainly actual gameplay
                 Update();
+                //le fin~
                 End();
 
             }
@@ -95,7 +98,7 @@ namespace HelloWorld
                 //If input is 1, the player wants to attack. By default the enemy blocks any incoming attack < that sucks so no
                 if (input == '1')
                 {
-                    Console.Write("> ");
+                    Console.Write("\n> ");
                     Console.ReadKey();
                     Console.Clear();
                     enemyHealth -= player1.playerDamage;
@@ -109,7 +112,7 @@ namespace HelloWorld
                 //called instead of simply decrementing the health by the enemy's attack value.
                 if (input == '2')
                 {
-                    Console.Write("> ");
+                    Console.Write("\n> ");
                     Console.ReadKey();
                     Console.Clear();
                     int attackVal = player1.playerDamage;
@@ -117,7 +120,7 @@ namespace HelloWorld
                     BlockAttack(ref enemyHealth, ref attackVal, ref enemyDefense, ref damage);
                     Console.WriteLine(enemyName + " dealt " + enemyAttack + " damage.");
 
-                    Console.Write("> ");
+                    Console.Write("\n> ");
                     Console.ReadKey();
                     Console.Clear();
 
@@ -175,6 +178,14 @@ namespace HelloWorld
                 }
 
             }
+
+            if (enemyName == "Wizard" && player1._playerHealth > 0)
+            {
+                //can't make it where it goes onto the next room so i might as well gon on with the joke...please let this be >:[
+                Console.WriteLine("Why would you need to go onto other enimies? You have already defeated the godly wizard.");
+            }
+
+
             //Return whether or not our player died
             if (player1._playerHealth > 0)
             {
@@ -199,11 +210,13 @@ namespace HelloWorld
             return damage;
         }
 
+        //the actual potions
         void PotionChoices(int _playerHealth, int _playerDefense)
         {
+            //you do not know how much i wanted to cry when creating this part
             int potion = 0;
             char input = ' ';
-            Console.WriteLine("Since this is your first dungeon I will let you get these for free.");
+            Console.WriteLine("\nSince this is your first dungeon I will let you get these for free.");
             GetInput("Blue Potion", "Red Potion", "Random", "Which potion do you want?");
             if(input == '1')
             {
@@ -222,7 +235,7 @@ namespace HelloWorld
 
             switch (potion)
             {
-                case 0:
+                case 0: //this will randomize the two options that the player has becuase some of us doesn't want to play the matrix game
                 {
                 
                     random = new Random();
@@ -258,12 +271,13 @@ namespace HelloWorld
                     _playerHealth = _playerHealth + 30;
                         break;
                 }
-                default:
+                default: //if the player decides 4 or uuuuh APPLE!2
                 {
                     Console.WriteLine("\nToo bad, maybe next time!");
                     break;
                 }
             }
+            Console.WriteLine("'Now onto the battle!' the old man announced.");
      
             return;
         }
@@ -271,6 +285,7 @@ namespace HelloWorld
 
         //Scales up the player's stats based on the amount of turns it took in the last battle
         //can also upgrade stats
+        //potion shop
         public void UpgradeStats(int turnCount)
         {
 
@@ -290,6 +305,7 @@ namespace HelloWorld
             }
 
             //Subtract the amount of turns from our maximum level scale to get our current level scale
+            //like do I need this? No, maybe not. But I'm keeping this. 
             int scale = player1._levelScaleMax - turnCount;
             if (scale <= 0)
             {
@@ -318,6 +334,9 @@ namespace HelloWorld
             }
             return input;
         }
+
+
+        //2 options with question
         char GetInput(string option1, string option2, string quiry)
         {
             Console.WriteLine(quiry);
@@ -333,6 +352,9 @@ namespace HelloWorld
             }
             return input;
         }
+
+
+        //3 options and a question
         char GetInput(string option1, string option2, string option3, string quiry)
         {
             Console.WriteLine(quiry);
@@ -349,6 +371,8 @@ namespace HelloWorld
             }
             return input;
         }
+
+        //4 options and a question
         char GetInput(string option1, string option2, string option3, string option4, string quiry)
         {
             Console.WriteLine(quiry);
@@ -377,6 +401,7 @@ namespace HelloWorld
         }
 
         //This is used to progress through our game. A recursive function meant to switch the rooms and start the battles inside them.
+        //Now do i know exactly what the recursive function actually is? No. I'm learning.
         void ClimbLadder(int roomNum)
         {
             if (player1._playerHealth > 0)
